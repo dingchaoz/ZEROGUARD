@@ -17,6 +17,10 @@ module.exports = {
       url: RPC_URL,
       accounts: [PRIVATE_KEY],
     },
+        "mantle-testnet": {
+      url: "https://rpc.testnet.mantle.xyz/",
+      accounts: [PRIVATE_KEY] // Uses the private key from the .env file
+    },
     goerli: {
       url: GORLIE_RPC_URL,
       accounts: [PRIVATE_KEY],
