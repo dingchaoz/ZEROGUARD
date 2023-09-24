@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "stateless-service-helm.fullname" . }}
+  labels:
+    {{- include "stateless-service-helm.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "stateless-service-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+      {{- if .Values.vaultAgent.enabled }}
+        vault.hashicorp.com/role: {{ include "stateless-service-helm.serviceAccountName" . }}
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-init-first: "true"
+        vault.hashicorp.com/agent-pre-populate-only: "true"
+      {{- end }}
+      {{- if and .Values.vaultAgent.enabled .Values.vaultAgent.injectEnv }}
+        vault.hashicorp.com/agent-inject-secret-.env: "{{ .Values.environment }}/{{- include "stateless-service-helm.fullname" . }}/.env"
+        vault.hashicorp.com/agent-inject-template-.env: |
+          {{`{{- with secret "`}}{{ .Values.environment }}/{{- include "stateless-service-helm.fullname" . }}{{`/.env" -}}`}}
+          {{`{{ .Data.value }}`}}
+          {{`{{- end }}`}}
+      {{- end }}
+      {{- with .Values.vaultAgent.annotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end}}
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "stateless-service-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "stateless-service-helm.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Release.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if and .Values.vaultAgent.enabled .Values.vaultAgent.injectEnv }}
+          env:
+            - name: ENV_PATH
+              value: "/vault/secrets/.env"
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

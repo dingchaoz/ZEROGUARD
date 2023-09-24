@@ -1,0 +1,27 @@
+# docker-compose -f docker-compose.test.yaml up --abort-on-container-exit
+version: "3.8"
+services:
+  app:
+    env_file:
+      - .env
+    tty: true
+    working_dir: /app
+    build:
+      context: ./docker/local
+      args:
+        - NODEJS_VERSION=${NODEJS_VERSION}
+    volumes:
+      - ./:/app
+#    depends_on:
+#      -
+    command:
+      - "npm"
+      - "run"
+      - "openapi-doc:build"
+
+    networks:
+      - openapi
+
+networks:
+  openapi:
+    name: openapi

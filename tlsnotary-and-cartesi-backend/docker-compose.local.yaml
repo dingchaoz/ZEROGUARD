@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  app:
+    profiles: ["docker-workflow"]
+    container_name: ${SERVICE_NAME}
+    env_file:
+      - .env
+    tty: true
+    stdin_open: true
+    working_dir: /app
+    entrypoint: /bin/sh
+    build:
+      context: ./docker/local
+      args:
+        - NODEJS_VERSION=${NODEJS_VERSION}
+    volumes:
+      - ./:/app
+    ports:
+      - ${API_PORT}:${API_PORT}
+      # debug mode https://blog.risingstack.com/how-to-debug-a-node-js-app-in-a-docker-container/
+      - 9229:9229
+    networks:
+      - shared
+
+networks:
+  shared:
+    name: shared

@@ -1,0 +1,11 @@
+CHANGELOG.md merge=ours
+package.json merge=ours
+package-lock.json merge=ours
+.env.example merge=ours
+k8s/**/* merge=ours
+src/users/**/* merge=ours
+packages/**/* merge=ours
+lerna.json  merge=ours
+docs/openapi.json  merge=ours
+test/jest-e2e.json merge=ours
+env/.env.ci merge=ours

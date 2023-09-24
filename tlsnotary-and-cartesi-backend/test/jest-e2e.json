@@ -1,0 +1,32 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "setupFiles": [
+    "../src/setup-env.ts"
+  ],
+  "setupFilesAfterEnv": [
+    "./setup-jest.js"
+  ],
+  "globals": {
+    "ts-jest": {
+      "astTransformers": {
+        "before": [
+          "test/nestjs-swagger-transformer.js"
+        ]
+      }
+    }
+  },
+  "moduleNameMapper": {
+    "@app/event/(.*)": "<rootDir>/../packages/event/src/$1",
+    "@app/event": "<rootDir>/../packages/event/src"
+  }
+}

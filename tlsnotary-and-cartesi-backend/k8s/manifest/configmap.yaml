@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: microservice-nestjs-template-config
+data:
+  .env: |
+    NODE_ENV=dev
+    NODEJS_VERSION=14
+    SERVICE_NAME=microservice-nestjs-template
+    API_HOST=microservice-nestjs-template-svc
+    API_PORT=3000

@@ -1,0 +1,14 @@
+{
+  "packages": [
+    "packages/*"
+  ],
+  "version": "1.3.0",
+  "command": {
+    "publish": {
+      "registry": "https://npm.pkg.github.com/"
+    },
+    "init": {
+      "exact": true
+    }
+  }
+}

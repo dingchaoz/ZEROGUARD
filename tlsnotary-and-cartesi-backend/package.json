@@ -1,0 +1,152 @@
+{
+  "name": "tlsnotary-and-cartesi-backend",
+  "version": "1.3.0",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "description": "",
+  "author": "Peggy Liu <peggy.liu@tokenbricks.com>",
+  "contributors": [
+    {
+      "name": "Peggy Liu",
+      "email": "peggy.liu@tokenbricks.com"
+    }
+  ],
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "prepare": "husky install",
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"packages/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug 0.0.0.0 --watch",
+    "start:prod": "node dist/src/main.js",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk=0.0.0.0 -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "openapi-server:start": "./scripts/openapi-server-start.sh",
+    "openapi-client:build": "./scripts/openapi-client-build.sh",
+    "project:init": "./scripts/project-init.sh",
+    "image:publish": "./scripts/image-publish.sh",
+    "env:config": "./scripts/env-config.sh",
+    "premigration": "rimraf dist",
+    "migration": "./scripts/migration.sh",
+    "k8s-deployment-image:update": "./scripts/k8s-deployment-image-update.sh",
+    "docker-compose:test:e2e": "docker-compose -f docker-compose.test.yaml up --renew-anon-volumes --abort-on-container-exit",
+    "docker-compose:docker-workflow": "docker-compose -f docker-compose.local.yaml --profile docker-workflow",
+    "docker-compose": "docker-compose -f docker-compose.local.yaml",
+    "helm:install": "./scripts/ecr-helm-chart-install.sh",
+    "vault:init": "./scripts/vault-init.sh",
+    "vault:env:create": "./scripts/vault-env-create.sh",
+    "openapi-doc:build": "nest start -c nest-cli-openapi.json",
+    "predocker-compose:openapi-doc:build": "rimraf dist",
+    "docker-compose:openapi-doc:build": "docker-compose -f docker-compose.openapi.yaml up --abort-on-container-exit",
+    "openapi-client-packages:build": "./scripts/openapi-client-packages-build.sh",
+    "package:create": "ts-node ./scripts/package-create.ts",
+    "packages:build": "npx lerna run build",
+    "packages:build:client": "./scripts/packages-client-build.sh",
+    "packages:build:not-client": "./scripts/packages-not-client-build.sh",
+    "packages:version": "./scripts/packages-version.sh",
+    "packages:publish": "./scripts/packages-publish.sh",
+    "template:merge": "./scripts/template-merge.sh"
+  },
+  "dependencies": {
+    "@nestjs/axios": "3.0.0",
+    "@nestjs/common": "10.1.2",
+    "@nestjs/core": "10.1.2",
+    "@nestjs/microservices": "10.1.2",
+    "@nestjs/platform-express": "10.1.2",
+    "@nestjs/swagger": "7.1.2",
+    "@nestjs/terminus": "10.0.1",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.14.0",
+    "dotenv-safe": "8.2.0",
+    "hpropagate": "1.0.1",
+    "mathjs": "11.9.1",
+    "nestjs-pino": "3.3.0",
+    "reflect-metadata": "0.1.13",
+    "rimraf": "5.0.1",
+    "rxjs": "7.8.1",
+    "swagger-ui-express": "5.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "17.6.7",
+    "@commitlint/config-conventional": "17.6.7",
+    "@nestjs/cli": "10.1.10",
+    "@nestjs/schematics": "10.0.1",
+    "@nestjs/testing": "10.1.2",
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/exec": "6.0.3",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/github": "9.0.4",
+    "@types/express": "4.17.17",
+    "@types/jest": "29.5.3",
+    "@types/mathjs": "9.4.2",
+    "@types/multer": "1.4.7",
+    "@types/node": "18.15.3",
+    "@types/supertest": "2.0.12",
+    "@typescript-eslint/eslint-plugin": "6.2.0",
+    "@typescript-eslint/parser": "6.2.0",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint": "8.45.0",
+    "eslint-config-prettier": "8.8.0",
+    "eslint-plugin-prettier": "5.0.0",
+    "husky": "8.0.3",
+    "jest": "29.6.1",
+    "lerna": "5.1.8",
+    "lint-staged": "13.2.3",
+    "pino-pretty": "10.2.0",
+    "prettier": "3.0.0",
+    "semantic-release": "21.0.7",
+    "supertest": "6.3.3",
+    "ts-jest": "29.1.1",
+    "ts-loader": "9.4.4",
+    "ts-node": "10.9.1",
+    "tsconfig-paths": "4.2.0",
+    "typescript": "5.1.6"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": ".",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "setupFiles": [
+      "<rootDir>/src/setup-env.ts"
+    ],
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/packages/"
+    ],
+    "moduleNameMapper": {
+      "@app/event/(.*)": "<rootDir>/packages/event/src/$1",
+      "@app/event": "<rootDir>/packages/event/src"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "**/*.ts?(x)": "bash -c tsc -p tsconfig.json --noEmit",
+    "*.{js,jsx,ts,tsx,md,html,css}": "prettier --write",
+    "{src,apps,libs,test,packages}/**/*.ts": "eslint --fix"
+  }
+}

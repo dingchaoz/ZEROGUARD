@@ -1,0 +1,34 @@
+{
+  "branches": [ "main" ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    ["@semantic-release/npm", {
+      "npmPublish": false,
+      "tarballDir": "dist",
+    }],
+    "@semantic-release/github",
+    ["@semantic-release/exec", {
+      "prepareCmd": "npm run packages:version -- ${nextRelease.version} && npm run packages:build:not-client && [ -f \"nest-cli-openapi.json\" ] && npm run docker-compose:openapi-doc:build && [ -n \"$(find packages -maxdepth 1 -name \"*-client\")\" ] && npm run openapi-client-packages:build && npm run packages:build:client",
+      "publishCmd": "npm run packages:publish -- ${nextRelease.version}"
+    }],
+    ["@semantic-release/exec", {
+      "prepareCmd": "npm run k8s-deployment-image:update -- ${nextRelease.version}",
+      "publishCmd": "npm run image:publish -- -r ecr -v 18.12.1"
+    }],
+    ["@semantic-release/git", {
+      "assets": [
+        'CHANGELOG.md',
+        'package.json',
+        'package-lock.json',
+        'npm-shrinkwrap.json',
+        'k8s/manifest/deployment.yaml',
+        'k8s/charts/stateless-service-helm/dev.values.yaml',
+        ['packages/**', '!**/dist/**'],
+        'lerna.json',
+        'docs/openapi.json'
+      ]
+    }]
+  ]
+}

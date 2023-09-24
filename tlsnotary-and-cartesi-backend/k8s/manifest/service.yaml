@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: microservice-nestjs-template-svc
+spec:
+  selector:
+    app: microservice-nestjs-template
+  type: ClusterIP
+  ports:
+    - name: http-microservice-nestjs-template
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+    # only for development
+    - name: prism
+      protocol: TCP
+      port: 4010
+      targetPort: 4010

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-nestjs-template
+spec:
+  selector:
+    matchLabels:
+      app: microservice-nestjs-template
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: microservice-nestjs-template
+    spec:
+      imagePullSecrets:
+        - name: ecr-registry-secret
+      containers:
+        - name: microservice-nestjs-template
+          image: 940355036220.dkr.ecr.us-east-1.amazonaws.com/microservice-nestjs-template:1.0.13
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+          volumeMounts:
+            - name: microservice-nestjs-template-config
+              readOnly: true
+              mountPath: "/app/.env"
+              subPath: ".env"
+        # only for development
+        - name: prism
+          image: stoplight/prism:4
+          imagePullPolicy: Always
+          args:
+            - mock
+            - -h
+            - "0.0.0.0"
+            - http://localhost:3000/api-json
+
+      volumes:
+        - name: microservice-nestjs-template-config
+          configMap:
+            name: microservice-nestjs-template-config                                                                            
