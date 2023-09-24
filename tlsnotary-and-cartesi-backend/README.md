@@ -1,4 +1,15 @@
 # tlsnotary-and-cartesi-backend
+# diagram
+
+![image](https://github.com/dingchaoz/ZEROGUARD/assets/10751336/f90712d3-f284-440a-8736-b3301a6f1885)
+
+- 1: local tlsnotary server
+- 2: local cartesit rollups
+- 3: local cartesit backend
+- 4: remote server cartesit rollups
+- 5: remote server cartesit backend
+
+![image](https://github.com/dingchaoz/ZEROGUARD/assets/10751336/a38924dc-d8d4-4133-bb5e-0cb14b2d5a4d)
 
 ## run
 
@@ -6,6 +17,7 @@
 
 ```
 git clone git@github.com:tlsnotary/notary-server.git
+
 
 cd notary-server
 
