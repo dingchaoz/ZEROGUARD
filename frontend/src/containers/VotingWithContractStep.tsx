@@ -6,7 +6,7 @@
 import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useContractRead, useContractWrite } from 'wagmi';
-
+import lit from './Lit';
 import { CommitRevealABI } from '@/abi/CommitRevealABI';
 
 export default function VotingWithContractStep() {
@@ -18,6 +18,17 @@ export default function VotingWithContractStep() {
   const [step, setStep] = useState<
     'setPassword' | 'verify' | 'verified' | 'group'
   >('group');
+  const [file, setFile] = useState(null);
+  const [encryptedFile, setEncryptedFile] = useState(null);
+  const [encryptedSymmetricKey, setEncryptedSymmetricKey] = useState(null);
+  const [fileSize, setFileSize] = useState(0);
+
+  const selectFile = (e) => {
+    setFile(e.target.files[0]);
+    setEncryptedFile(null);
+    setEncryptedSymmetricKey(null);
+    setFileSize(0);
+  }
 
   const { data } = useContractRead({
     address: process.env.NEXT_PUBLIC_VOTING_CONTRACT_ADDRESS as any,
@@ -59,6 +70,16 @@ export default function VotingWithContractStep() {
       process.env.NEXT_PUBLIC_VOTING_CONTRACT_ADDRESS
     );
     console.log('data', data);
+    if (vote === null) {
+      alert("Please enter a vote before encrypting!");
+      return;
+    }
+
+    const { encryptedFile, encryptedSymmetricKey } = await lit.encryptFile(vote);
+    setEncryptedFile(encryptedFile);
+    setEncryptedSymmetricKey(encryptedSymmetricKey);
+    setFileSize(0);
+  }
     await writeAsync();
     // setVotedWithContract(true);
   };
